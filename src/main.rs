@@ -1,16 +1,15 @@
 use std::{
+    process,
     sync::{
         atomic::{AtomicBool, Ordering::SeqCst},
         Arc,
     },
     thread::{self, sleep},
-    time::Duration, process,
+    time::Duration,
 };
 
 use clap::Parser;
 use csv::Writer;
-
-
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -56,7 +55,6 @@ fn main() {
         println!("{}", err);
         process::exit(1);
     }
-    
 }
 
 fn get_args(args: &Args) -> (&String, &String, &u64) {
@@ -83,7 +81,6 @@ fn create_csv(output: &str) -> Result<(), Box<dyn std::error::Error>> {
     // Fermez le fichier CSV (c'est important pour garantir que les données sont écrites)
     writer.flush()?;
     Ok(())
-
 }
 
 // Import necessary modules for testing
@@ -146,6 +143,6 @@ mod tests {
         // Par exemple, vous pouvez utiliser std::fs::metadata pour vérifier l'existence du fichier.
 
         // Supprimez le fichier CSV de test après le test
-        std::fs::remove_file(test_output).expect("Failed to remove test CSV file"); 
+        std::fs::remove_file(test_output).expect("Failed to remove test CSV file");
     }
 }
