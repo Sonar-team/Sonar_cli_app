@@ -4,8 +4,7 @@ use std::{
         Arc,
     },
     thread::{self, sleep},
-    time::Duration,
-    error::Error, io, process
+    time::Duration, process,
 };
 
 use clap::Parser;
@@ -34,7 +33,7 @@ fn main() {
     let (output, interface, time) = get_args(&args);
     println!("Output: {}, Network: {}, Time: {}", output, interface, time);
     if time > &0 {
-        println!("Waiting for {} seconds...", time);
+        println!("Scanning for {} seconds...", time);
         let duration = Duration::from_secs(*time);
         sleep(duration);
     } else {
@@ -53,7 +52,7 @@ fn main() {
         }
     }
 
-    if let Err(err) = create_csv(&output) {
+    if let Err(err) = create_csv(output) {
         println!("{}", err);
         process::exit(1);
     }
