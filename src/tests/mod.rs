@@ -1,10 +1,21 @@
 #[cfg(test)]
 use super::*; // Import items from the main module
               // Test case for get_args with default values
+
+
 #[test]
-fn test_main(){
-    main();
-    assert_eq!(true,true)
+fn test_main() {
+    use assert_cmd::Command;
+    let _ = Command::cargo_bin("sonar_cli_app")
+        .unwrap()
+        .arg("--output=test_output.csv")
+        .arg("--interface=test_interface")
+        .arg("--time=5")
+        .assert()
+        .success()
+        .stdout(predicates::str::contains("Scan completed successfully. CSV file created."));
+    // Vérifiez que la sortie indique que le scan a réussi et que le fichier CSV a été créé output
+
 }
 
 #[test]

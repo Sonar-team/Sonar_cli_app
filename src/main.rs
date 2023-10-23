@@ -30,7 +30,7 @@ fn main() {
 
     let args = Args::parse();
     let (output, interface, time) = get_args(&args);
-    println!("Output: {}, Network: {}, Time: {}", output, interface, time);
+    println!("Output: {}, Interface: {}, Time: {}", output, interface, time);
 
     if time > &0 {
         scan_for_time(output, interface, *time);
