@@ -2,7 +2,6 @@
 use super::*; // Import items from the main module
               // Test case for get_args with default values
 
-
 #[test]
 fn test_main() {
     use assert_cmd::Command;
@@ -13,9 +12,10 @@ fn test_main() {
         .arg("--time=5")
         .assert()
         .success()
-        .stdout(predicates::str::contains("Scan completed successfully. CSV file created."));
+        .stdout(predicates::str::contains(
+            "Scan completed successfully. CSV file created.",
+        ));
     // Vérifiez que la sortie indique que le scan a réussi et que le fichier CSV a été créé output
-
 }
 
 #[test]
