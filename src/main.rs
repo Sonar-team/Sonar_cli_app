@@ -15,10 +15,17 @@ struct Args {
 }
 
 fn main() {
+    let a = 1;
+    let b = 2;
+    addition(a, b);
     
     print_banner();
 
     pars_arguments();
+}
+
+fn addition(a: i32, b: i32) -> i32 {
+    a + b
 }
 
 fn print_banner() {
@@ -45,6 +52,11 @@ fn pars_arguments() {
 mod tests {
 
     use super::*; // Import items from the main module
+    // Test addition function
+    #[test]
+    fn test_addition() {
+        assert_eq!(addition(1, 2), 3);
+    }
 
     // Test case for parsing command-line arguments
     #[test]
