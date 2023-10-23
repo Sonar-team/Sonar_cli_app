@@ -29,14 +29,14 @@ fn get_args(args: &Args) -> (String, u8, u32) {
 
 fn print_banner() -> String {
     // ASCII art banner
-    let banner = r#"
+    let banner = r"
     _________                           
    /   _____/ ____   ____ _____ _______ 
    \_____  \ /  _ \ /    \\__  \\_  __ \
    /        (  <_> )   |  \/ __ \|  | \/
   /_______  /\____/|___|  (____  /__|   
           \/            \/     \/          
-   "#;
+   ";
 
    banner.to_string()
 }
