@@ -1,5 +1,3 @@
-
-
 #[cfg(test)]
 use super::*; // Import items from the main module
               // Test case for get_args with default values
@@ -7,7 +5,7 @@ use super::*; // Import items from the main module
 #[test]
 fn test_main() {
     use assert_cmd::prelude::*; // Importez assert_cmd::prelude::* pour utiliser la syntaxe assert_cmd
-    //use predicates::prelude::*; // Importez predicates::prelude::* pour utiliser la syntaxe predicates
+                                //use predicates::prelude::*; // Importez predicates::prelude::* pour utiliser la syntaxe predicates
     use std::process::Command;
 
     let assert = Command::cargo_bin("sonar_cli_app")
@@ -19,10 +17,7 @@ fn test_main() {
 
     // Vérifiez que le programme s'est exécuté avec succès (code de sortie 0)
     assert.success();
-
 }
-              
-              
 
 #[test]
 fn test_get_args_default() {
