@@ -15,18 +15,17 @@ struct Args {
 }
 
 fn main() {
-    let a = 1;
-    let b = 2;
-    addition(a, b);
-    
     print_banner();
 
-    pars_arguments();
+    let args = Args::parse();
+    let (output, network, time) = get_args(&args);
+    println!("Output: {}, Network: {}, Time: {}", output, network, time);
 }
 
-fn addition(a: i32, b: i32) -> i32 {
-    a + b
+fn get_args(args: &Args) -> (String, u8, u32) {
+    (args.output.clone(), args.network, args.time)
 }
+
 
 fn print_banner() {
     // ASCII art banner
@@ -42,38 +41,45 @@ fn print_banner() {
    println!("{}", banner);
 }
 
-fn pars_arguments() {
-    let args = Args::parse();
-    println!("{} {}",args.network, args.output)
-}
 
 // Import necessary modules for testing
 #[cfg(test)]
 mod tests {
 
     use super::*; // Import items from the main module
-    // Test addition function
+
+    // Test case for get_args with default values
     #[test]
-    fn test_addition() {
-        assert_eq!(addition(1, 2), 3);
+    fn test_get_args_default() {
+        let args = Args {
+            output: "default_output".to_string(),
+            network: 1,
+            time: 0,
+        };
+
+        let (output, network, time) = get_args(&args);
+
+        assert_eq!(output, "default_output");
+        assert_eq!(network, 1);
+        assert_eq!(time, 0);
     }
 
-    // Test case for parsing command-line arguments
+    // Test case for get_args with custom values
     #[test]
-    fn test_parse_arguments() {
-        // Simulate command-line arguments for testing
-        let args = Args::parse_from(&["myapp", "-n", "42", "--output", "output.csv"]);
+    fn test_get_args_custom() {
+        let args = Args {
+            output: "custom_output".to_string(),
+            network: 42,
+            time: 10,
+        };
 
-        // Check if the arguments were parsed correctly
-        assert_eq!(args.network, 42);
-        assert_eq!(args.output, "output.csv");
-        assert_eq!(args.time, 0); // Default value
+        let (output, network, time) = get_args(&args);
+
+        assert_eq!(output, "custom_output");
+        assert_eq!(network, 42);
+        assert_eq!(time, 10);
     }
-
-    // Test case for the main function (if needed)
-    // #[test]
-    // fn test_main() {
-    //     // Add test logic for your main function if necessary
-    // }
 }
+
+
 
