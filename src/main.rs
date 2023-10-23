@@ -83,5 +83,4 @@ fn create_csv(output: &str) -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-
-mod tests ;
+mod tests;
