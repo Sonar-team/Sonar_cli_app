@@ -91,7 +91,8 @@ fn scan_until_interrupt(output: &str, interface: &str) {
     ctrlc::set_handler(move || {
         println!("Ctrl+C pressed. Exiting...");
         r.store(false, SeqCst);
-        match create_csv(&output_clone) { // Utilisez output_clone ici
+        match create_csv(&output_clone) {
+            // Utilisez output_clone ici
             Ok(_) => {
                 println!("Scan completed successfully. CSV file created.");
             }

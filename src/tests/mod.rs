@@ -83,9 +83,9 @@ fn test_scan_for_time_success() {
 
 #[test]
 fn test_scan_until_interrupt() {
+    use ctrlc::Signal;
     use nix::sys::signal;
     use nix::unistd::Pid;
-    use ctrlc::Signal;
 
     // Spécifiez un nom de fichier de test
     let test_output = "test_output.csv";
