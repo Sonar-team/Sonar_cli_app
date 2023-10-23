@@ -5,10 +5,13 @@ use std::{
     },
     thread::{self, sleep},
     time::Duration,
+    error::Error, io, process
 };
 
 use clap::Parser;
 use csv::Writer;
+
+
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -49,8 +52,12 @@ fn main() {
             thread::sleep(Duration::from_secs(1));
         }
     }
-    // creat a csv file
-    let _ = Writer::from_path(output).unwrap();
+
+    if let Err(err) = create_csv(&output) {
+        println!("{}", err);
+        process::exit(1);
+    }
+    
 }
 
 fn get_args(args: &Args) -> (&String, &String, &u64) {
@@ -69,6 +76,15 @@ fn print_banner() -> String {
    ";
 
     banner.to_string()
+}
+
+fn create_csv(output: &str) -> Result<(), Box<dyn std::error::Error>> {
+    // creat a csv file
+    let mut writer = Writer::from_path(output)?;
+    // Fermez le fichier CSV (c'est important pour garantir que les données sont écrites)
+    writer.flush()?;
+    Ok(())
+
 }
 
 // Import necessary modules for testing
@@ -102,10 +118,10 @@ mod tests {
             time: 10,
         };
 
-        let (output, network, time) = get_args(&args);
+        let (output, interface, time) = get_args(&args);
 
         assert_eq!(output, "custom_output");
-        assert_eq!(network, "any");
+        assert_eq!(interface, "any");
         assert_eq!(time, &10);
     }
     // Test case for print_banner
@@ -114,5 +130,23 @@ mod tests {
         let banner = print_banner();
 
         assert_eq!(banner, banner);
+    }
+
+    #[test]
+    fn test_create_csv() {
+        // Spécifiez un chemin de fichier pour le test
+        let test_output = "test_output.csv";
+
+        // Appelez la fonction que vous voulez tester
+        let result = create_csv(test_output);
+
+        // Vérifiez que le résultat est Ok, ce qui signifie que la création du fichier CSV a réussi
+        assert!(result.is_ok());
+
+        // Vous pouvez également vérifier que le fichier CSV a été créé en vérifiant son existence ou son contenu.
+        // Par exemple, vous pouvez utiliser std::fs::metadata pour vérifier l'existence du fichier.
+
+        // Supprimez le fichier CSV de test après le test
+        std::fs::remove_file(test_output).expect("Failed to remove test CSV file"); 
     }
 }
