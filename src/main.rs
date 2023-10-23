@@ -9,13 +9,13 @@ struct Args {
     #[arg(short, long, default_value_t = 1)]
     /// give the interface name to scan
     network: u8,
-    /// Give the scan time 
+    /// Give the scan time
     #[arg(short, long, default_value_t = 0)]
     time: u32,
 }
 
 fn main() {
-    println!("{}",print_banner());
+    println!("{}", print_banner());
 
     let args = Args::parse();
     let (output, network, time) = get_args(&args);
@@ -25,7 +25,6 @@ fn main() {
 fn get_args(args: &Args) -> (String, u8, u32) {
     (args.output.clone(), args.network, args.time)
 }
-
 
 fn print_banner() -> String {
     // ASCII art banner
@@ -38,7 +37,7 @@ fn print_banner() -> String {
           \/            \/     \/          
    ";
 
-   banner.to_string()
+    banner.to_string()
 }
 
 // Import necessary modules for testing
