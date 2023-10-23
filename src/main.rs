@@ -15,7 +15,7 @@ struct Args {
 }
 
 fn main() {
-    print_banner();
+    println!("{}",print_banner());
 
     let args = Args::parse();
     let (output, network, time) = get_args(&args);
@@ -27,7 +27,7 @@ fn get_args(args: &Args) -> (String, u8, u32) {
 }
 
 
-fn print_banner() {
+fn print_banner() -> String {
     // ASCII art banner
     let banner = r#"
     _________                           
@@ -38,7 +38,7 @@ fn print_banner() {
           \/            \/     \/          
    "#;
 
-   println!("{}", banner);
+   banner.to_string()
 }
 
 
@@ -79,7 +79,11 @@ mod tests {
         assert_eq!(network, 42);
         assert_eq!(time, 10);
     }
+    // Test case for print_banner
+    #[test]
+    fn test_print_banner() {
+        let banner = print_banner();
+
+        assert_eq!(banner, banner);
+    }
 }
-
-
-
