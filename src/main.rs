@@ -32,9 +32,7 @@ fn main() {
     let (output, interface, time) = get_args(&args);
     println!("Output: {}, Network: {}, Time: {}", output, interface, time);
     if time > &0 {
-        println!("Scanning for {} seconds...", time);
-        let duration = Duration::from_secs(*time);
-        sleep(duration);
+        scan_for_time(output, interface, *time);
     } else {
         println!("Press Ctrl+C to exit...");
         let running = Arc::new(AtomicBool::new(true));
@@ -49,11 +47,6 @@ fn main() {
             // Continue running until Ctrl+C is pressed
             thread::sleep(Duration::from_secs(1));
         }
-    }
-
-    if let Err(err) = create_csv(output) {
-        println!("{}", err);
-        process::exit(1);
     }
 }
 
@@ -81,6 +74,23 @@ fn create_csv(output: &str) -> Result<(), Box<dyn std::error::Error>> {
     // Fermez le fichier CSV (c'est important pour garantir que les données sont écrites)
     writer.flush()?;
     Ok(())
+}
+
+fn scan_for_time(output: &str, interface: &str, time: u64) {
+    println!("Scanning {} for {} seconds...", interface, time);
+
+    let duration = Duration::from_secs(time);
+    sleep(duration);
+
+    match create_csv(output) {
+        Ok(_) => {
+            println!("Scan completed successfully. CSV file created.");
+        }
+        Err(err) => {
+            eprintln!("Error creating CSV file: {}", err);
+            process::exit(1);
+        }
+    }
 }
 
 mod tests;

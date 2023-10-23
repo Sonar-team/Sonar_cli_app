@@ -56,3 +56,27 @@ fn test_create_csv() {
     // Supprimez le fichier CSV de test après le test
     std::fs::remove_file(test_output).expect("Failed to remove test CSV file");
 }
+
+#[test]
+fn test_scan_for_time_success() {
+    use std::{fs, time::Instant};
+    // Créez un nom de fichier de test
+    let output = "test_output.csv";
+    // Définissez la durée pendant laquelle vous voulez mesurer le temps
+    let time = Duration::from_secs(3);
+
+    // Obtenez l'instant de départ
+    let start_time = Instant::now();
+
+    // Appelez la fonction de numérisation
+    scan_for_time(output, "test_interface", time.as_secs()); // Numérisation pendant 3 secondes (convertir la durée en secondes)
+
+    // Obtenez le temps écoulé
+    let elapsed_time = start_time.elapsed();
+
+    // Vérifiez que le temps écoulé est d'au moins 3 secondes
+    assert!(elapsed_time >= time);
+
+    // Supprimez le fichier CSV de test après le test
+    fs::remove_file(output).expect("Failed to remove test CSV file");
+}

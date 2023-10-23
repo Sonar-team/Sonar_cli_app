@@ -47,4 +47,4 @@ Les pull requests sont les bienvenues. Pour des changements majeurs, veuillez ou
 
 ## Licence
 
-MIT
+[MIT](LICENSE.md)
