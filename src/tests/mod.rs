@@ -10,7 +10,7 @@ fn test_main() {
     //use predicates::prelude::*; // Importez predicates::prelude::* pour utiliser la syntaxe predicates
     use std::process::Command;
 
-    let assert = Command::cargo_bin("Sonar_cli_app")
+    let assert = Command::cargo_bin("sonar_cli_app")
         .unwrap()
         .arg("--output=test_output.csv")
         .arg("--interface=test_interface")
