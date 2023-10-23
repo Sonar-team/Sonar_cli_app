@@ -1,10 +1,11 @@
-use std::{time::Duration,
-        thread::{sleep,
-                 self},
-        sync::{atomic::{AtomicBool,
-                        Ordering::SeqCst}, 
-            Arc}
-        };
+use std::{
+    sync::{
+        atomic::{AtomicBool, Ordering::SeqCst},
+        Arc,
+    },
+    thread::{self, sleep},
+    time::Duration,
+};
 
 use clap::Parser;
 use csv::Writer;
@@ -13,7 +14,7 @@ use csv::Writer;
 #[command(author, version, about, long_about = None)]
 struct Args {
     /// Name the output name of the csv
-    #[arg(short, long,  default_value = "output.csv")]
+    #[arg(short, long, default_value = "output.csv")]
     output: String,
     #[arg(short, long, default_value = "all")]
     /// give the interface name to scan
@@ -40,16 +41,16 @@ fn main() {
         ctrlc::set_handler(move || {
             println!("Ctrl+C pressed. Exiting...");
             r.store(false, SeqCst);
-        }).expect("Error setting Ctrl-C handler");
+        })
+        .expect("Error setting Ctrl-C handler");
 
         while running.load(SeqCst) {
             // Continue running until Ctrl+C is pressed
-            thread::sleep(Duration::from_secs(1)); 
+            thread::sleep(Duration::from_secs(1));
         }
     }
     // creat a csv file
     let _ = Writer::from_path(output).unwrap();
-
 }
 
 fn get_args(args: &Args) -> (&String, &String, &u64) {
