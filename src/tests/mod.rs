@@ -80,3 +80,33 @@ fn test_scan_for_time_success() {
     // Supprimez le fichier CSV de test après le test
     fs::remove_file(output).expect("Failed to remove test CSV file");
 }
+
+#[test]
+fn test_scan_until_interrupt() {
+    use nix::sys::signal;
+    use nix::unistd::Pid;
+    use ctrlc::Signal;
+
+    // Spécifiez un nom de fichier de test
+    let test_output = "test_output.csv";
+
+    // Créez un thread pour exécuter la fonction scan_until_interrupt
+    let handle = std::thread::spawn(move || {
+        scan_until_interrupt(test_output, "test_interface");
+    });
+
+    // Pausez le test pendant un certain temps (assez long pour simuler une exécution)
+    std::thread::sleep(std::time::Duration::from_secs(5));
+
+    // Envoyez une interruption simulée (comme si Ctrl+C était pressé)
+    signal::kill(Pid::this(), Signal::SIGINT).expect("Failed to send SIGINT signal");
+
+    // Attendez que le thread se termine
+    handle.join().expect("Thread panicked");
+
+    // Vérifiez que le fichier CSV a été créé
+    assert!(std::fs::metadata(test_output).is_ok());
+
+    // Supprimez le fichier CSV de test après le test
+    std::fs::remove_file(test_output).expect("Failed to remove test CSV file");
+}
