@@ -2,6 +2,12 @@
 use super::*; // Import items from the main module
               // Test case for get_args with default values
 #[test]
+fn test_main(){
+    main();
+    assert_eq!(true,true)
+}
+
+#[test]
 fn test_get_args_default() {
     let args = Args {
         output: "default_output".to_string(),
