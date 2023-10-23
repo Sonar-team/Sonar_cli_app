@@ -29,9 +29,9 @@ jobs:
       - run: cargo build --verbose
       - run: cargo test --verbose
       - run: cargo clippy --all-targets --all-features -- -D warnings
-      - run: cargo fmt --check --verbose
+      - run: cargo fmt -- all --check --verbose
       - run: cargo audit
-      
+
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install other dependencies
@@ -40,3 +40,5 @@ jobs:
         run: isutf8 **/*
       - name: Check line endings
         run: bash .github/workflows/scripts/check_line_endings.sh
+      - name: Check TODOs
+        run: bash .github/workflows/scripts/check_todos.sh
