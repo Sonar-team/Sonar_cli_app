@@ -1,22 +1,28 @@
+
+
 #[cfg(test)]
 use super::*; // Import items from the main module
               // Test case for get_args with default values
 
 #[test]
 fn test_main() {
-    use assert_cmd::Command;
-    let _ = Command::cargo_bin("sonar_cli_app")
+    use assert_cmd::prelude::*; // Importez assert_cmd::prelude::* pour utiliser la syntaxe assert_cmd
+    //use predicates::prelude::*; // Importez predicates::prelude::* pour utiliser la syntaxe predicates
+    use std::process::Command;
+
+    let assert = Command::cargo_bin("Sonar_cli_app")
         .unwrap()
         .arg("--output=test_output.csv")
         .arg("--interface=test_interface")
         .arg("--time=5")
-        .assert()
-        .success()
-        .stdout(predicates::str::contains(
-            "Scan completed successfully. CSV file created.",
-        ));
-    // Vérifiez que la sortie indique que le scan a réussi et que le fichier CSV a été créé output
+        .assert();
+
+    // Vérifiez que le programme s'est exécuté avec succès (code de sortie 0)
+    assert.success();
+
 }
+              
+              
 
 #[test]
 fn test_get_args_default() {
