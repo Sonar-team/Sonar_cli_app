@@ -1,29 +1,59 @@
+use std::{time::Duration,
+        thread::{sleep,
+                 self},
+        sync::{atomic::{AtomicBool,
+                        Ordering::SeqCst}, 
+            Arc}
+        };
+
 use clap::Parser;
+use csv::Writer;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
     /// Name the output name of the csv
-    #[arg(short, long)]
+    #[arg(short, long,  default_value = "output.csv")]
     output: String,
-    #[arg(short, long, default_value_t = 1)]
+    #[arg(short, long, default_value = "all")]
     /// give the interface name to scan
-    network: u8,
+    interface: String,
     /// Give the scan time
     #[arg(short, long, default_value_t = 0)]
-    time: u32,
+    time: u64,
 }
 
 fn main() {
     println!("{}", print_banner());
 
     let args = Args::parse();
-    let (output, network, time) = get_args(&args);
-    println!("Output: {}, Network: {}, Time: {}", output, network, time);
+    let (output, interface, time) = get_args(&args);
+    println!("Output: {}, Network: {}, Time: {}", output, interface, time);
+    if time > &0 {
+        println!("Waiting for {} seconds...", time);
+        let duration = Duration::from_secs(*time);
+        sleep(duration);
+    } else {
+        println!("Press Ctrl+C to exit...");
+        let running = Arc::new(AtomicBool::new(true));
+        let r = running.clone();
+        ctrlc::set_handler(move || {
+            println!("Ctrl+C pressed. Exiting...");
+            r.store(false, SeqCst);
+        }).expect("Error setting Ctrl-C handler");
+
+        while running.load(SeqCst) {
+            // Continue running until Ctrl+C is pressed
+            thread::sleep(Duration::from_secs(1)); 
+        }
+    }
+    // creat a csv file
+    let _ = Writer::from_path(output).unwrap();
+
 }
 
-fn get_args(args: &Args) -> (String, u8, u32) {
-    (args.output.clone(), args.network, args.time)
+fn get_args(args: &Args) -> (&String, &String, &u64) {
+    (&args.output, &args.interface, &args.time)
 }
 
 fn print_banner() -> String {
@@ -51,15 +81,15 @@ mod tests {
     fn test_get_args_default() {
         let args = Args {
             output: "default_output".to_string(),
-            network: 1,
+            interface: "any".to_string(),
             time: 0,
         };
 
-        let (output, network, time) = get_args(&args);
+        let (output, interface, time) = get_args(&args);
 
         assert_eq!(output, "default_output");
-        assert_eq!(network, 1);
-        assert_eq!(time, 0);
+        assert_eq!(interface, "any");
+        assert_eq!(time, &0);
     }
 
     // Test case for get_args with custom values
@@ -67,15 +97,15 @@ mod tests {
     fn test_get_args_custom() {
         let args = Args {
             output: "custom_output".to_string(),
-            network: 42,
+            interface: "any".to_string(),
             time: 10,
         };
 
         let (output, network, time) = get_args(&args);
 
         assert_eq!(output, "custom_output");
-        assert_eq!(network, 42);
-        assert_eq!(time, 10);
+        assert_eq!(network, "any");
+        assert_eq!(time, &10);
     }
     // Test case for print_banner
     #[test]
