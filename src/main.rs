@@ -15,18 +15,27 @@ struct Args {
 }
 
 fn main() {
+    
+    print_banner();
+
+    pars_arguments();
+}
+
+fn print_banner() {
     // ASCII art banner
     let banner = r#"
-     _________                           
-    /   _____/ ____   ____ _____ _______ 
-    \_____  \ /  _ \ /    \\__  \\_  __ \
-    /        (  <_> )   |  \/ __ \|  | \/
-   /_______  /\____/|___|  (____  /__|   
-           \/            \/     \/          
-    "#;
+    _________                           
+   /   _____/ ____   ____ _____ _______ 
+   \_____  \ /  _ \ /    \\__  \\_  __ \
+   /        (  <_> )   |  \/ __ \|  | \/
+  /_______  /\____/|___|  (____  /__|   
+          \/            \/     \/          
+   "#;
 
-    println!("{}", banner);
+   println!("{}", banner);
+}
 
+fn pars_arguments() {
     let args = Args::parse();
     println!("{} {}",args.network, args.output)
 }
@@ -34,11 +43,12 @@ fn main() {
 // Import necessary modules for testing
 #[cfg(test)]
 mod tests {
+
     use super::*; // Import items from the main module
 
     // Test case for parsing command-line arguments
     #[test]
-    fn test_parse_args() {
+    fn test_parse_arguments() {
         // Simulate command-line arguments for testing
         let args = Args::parse_from(&["myapp", "-n", "42", "--output", "output.csv"]);
 
@@ -47,4 +57,11 @@ mod tests {
         assert_eq!(args.output, "output.csv");
         assert_eq!(args.time, 0); // Default value
     }
+
+    // Test case for the main function (if needed)
+    // #[test]
+    // fn test_main() {
+    //     // Add test logic for your main function if necessary
+    // }
 }
+
