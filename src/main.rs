@@ -41,7 +41,6 @@ fn print_banner() -> String {
    banner.to_string()
 }
 
-
 // Import necessary modules for testing
 #[cfg(test)]
 mod tests {
