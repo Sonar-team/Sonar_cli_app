@@ -19,7 +19,7 @@ pub fn all_interfaces() {
     // Wait for all threads to complete
     for handle in handles {
         match handle.join() {
-            Ok(_) => (),  // Thread completed without panicking
+            Ok(_) => (), // Thread completed without panicking
             Err(e) => eprintln!("A thread panicked: {:?}", e),
         }
     }
