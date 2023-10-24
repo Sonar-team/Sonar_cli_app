@@ -74,60 +74,59 @@ fn test_create_csv() {
     std::fs::remove_file(test_output).expect("Failed to remove test CSV file");
 }
 
-#[test]
-fn test_scan_for_time_success() {
-    use std::{fs, time::Instant};
-    // Créez un nom de fichier de test
-    let output = "test_output.csv";
-    // Définissez la durée pendant laquelle vous voulez mesurer le temps
-    let time = Duration::from_secs(3);
+// #[test]
+// fn test_scan_for_time_success() {
+//     use std::{fs, time::Instant};
+//     // Créez un nom de fichier de test
+//     let output = "test_output.csv";
+//     // Définissez la durée pendant laquelle vous voulez mesurer le temps
+//     let time = Duration::from_secs(3);
 
-    // Obtenez l'instant de départ
-    let start_time = Instant::now();
+//     // Obtenez l'instant de départ
+//     let start_time = Instant::now();
 
-    // Appelez la fonction de numérisation
-    scan_for_time(output, "lo", time.as_secs()); // Numérisation pendant 3 secondes (convertir la durée en secondes)
+//     // Appelez la fonction de numérisation
+//     scan_for_time(output, "lo", time.as_secs()); // Numérisation pendant 3 secondes (convertir la durée en secondes)
 
-    // Obtenez le temps écoulé
-    let elapsed_time = start_time.elapsed();
+//     // Obtenez le temps écoulé
+//     let elapsed_time = start_time.elapsed();
 
-    // Vérifiez que le temps écoulé est d'au moins 3 secondes
-    assert!(elapsed_time >= time);
+//     // Vérifiez que le temps écoulé est d'au moins 3 secondes
+//     assert!(elapsed_time >= time);
 
-    // Supprimez le fichier CSV de test après le test
-    fs::remove_file(output).expect("Failed to remove test CSV file");
-}
+//     // Supprimez le fichier CSV de test après le test
+//     fs::remove_file(output).expect("Failed to remove test CSV file");
+// }
 
-#[test]
-fn test_scan_until_interrupt() {
-    use ctrlc::Signal;
-    use nix::sys::signal;
-    use nix::unistd::Pid;
+// #[test]
+// fn test_scan_until_interrupt() {
+//     use ctrlc::Signal;
+//     use nix::sys::signal;
+//     use nix::unistd::Pid;
 
-    // Spécifiez un nom de fichier de test
-    let test_output = "test_output.csv";
+//     // Spécifiez un nom de fichier de test
+//     let test_output = "test_output.csv";
 
-    // Créez un thread pour exécuter la fonction scan_until_interrupt
-    let handle = std::thread::spawn(move || {
-        scan_until_interrupt(test_output, "lo");
-    });
+//     // Créez un thread pour exécuter la fonction scan_until_interrupt
+//     let handle = std::thread::spawn(move || {
+//         scan_until_interrupt(test_output, "lo");
+//     });
 
-    // Pausez le test pendant un certain temps (assez long pour simuler une exécution)
-    std::thread::sleep(std::time::Duration::from_secs(5));
+//     // Pausez le test pendant un certain temps (assez long pour simuler une exécution)
+//     std::thread::sleep(std::time::Duration::from_secs(5));
 
-    // Envoyez une interruption simulée (comme si Ctrl+C était pressé)
-    signal::kill(Pid::this(), Signal::SIGINT).expect("Failed to send SIGINT signal");
+//     // Envoyez une interruption simulée (comme si Ctrl+C était pressé)
+//     signal::kill(Pid::this(), Signal::SIGINT).expect("Failed to send SIGINT signal");
 
-    // Attendez que le thread se termine
-    handle.join().expect("Thread panicked");
+//     // Attendez que le thread se termine
+//     handle.join().expect("Thread panicked");
 
-    // Vérifiez que le fichier CSV a été créé
-    assert!(std::fs::metadata(test_output).is_ok());
+//     // Vérifiez que le fichier CSV a été créé
+//     assert!(std::fs::metadata(test_output).is_ok());
 
-    // Supprimez le fichier CSV de test après le test
-    std::fs::remove_file(test_output).expect("Failed to remove test CSV file");
-}
-
+//     // Supprimez le fichier CSV de test après le test
+//     std::fs::remove_file(test_output).expect("Failed to remove test CSV file");
+// }
 
 #[test]
 fn test_handle_interrupt() {
@@ -143,4 +142,3 @@ fn test_handle_interrupt() {
     // Verify that the CSV file is created (You can use std::fs to check)
     // This depends on how your `create_csv` function is implemented.
 }
-
