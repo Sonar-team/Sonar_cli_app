@@ -8,7 +8,7 @@ use super::*;
 //     use std::process::Command;
 
 //     let assert = Command::cargo_bin("sonar_cli_app")
-//         .unwrap()
+//         .unwrap ()
 //         .arg("--output=test_output.csv")
 //         .arg("--interface=test_interface")
 //         .arg("--time=5")
