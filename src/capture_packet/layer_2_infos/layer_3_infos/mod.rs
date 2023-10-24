@@ -1,11 +1,16 @@
 use pnet::packet::{
-    ethernet::{EthernetPacket, EtherTypes::{self}}, 
-    ipv6::Ipv6Packet, 
-    ipv4::Ipv4Packet, 
-    arp::ArpPacket, Packet};
+    arp::ArpPacket,
+    ethernet::{
+        EtherTypes::{self},
+        EthernetPacket,
+    },
+    ipv4::Ipv4Packet,
+    ipv6::Ipv6Packet,
+    Packet,
+};
 
 mod layer_4_infos;
-use layer_4_infos::{Layer4Infos, get_layer_4_infos};
+use layer_4_infos::{get_layer_4_infos, Layer4Infos};
 
 #[derive(Debug, Default)]
 pub struct Layer3Infos {
@@ -24,7 +29,7 @@ trait HandlePacket {
 }
 
 impl HandlePacket for Ipv4Handler {
-    fn get_layer_3(data: &[u8]) -> Layer3Infos{
+    fn get_layer_3(data: &[u8]) -> Layer3Infos {
         if let Some(ipv4_packet) = Ipv4Packet::new(data) {
             println!(
                 "Layer 3: IPv4 packet: source {} destination {} => {} {}",
@@ -34,11 +39,11 @@ impl HandlePacket for Ipv4Handler {
                 ipv4_packet.get_total_length()
             );
             //handle_next_proto_util(data, ipv4_packet.get_next_level_protocol());
-            Layer3Infos { 
-                ip_source: Some(ipv4_packet.get_source().to_string()), 
+            Layer3Infos {
+                ip_source: Some(ipv4_packet.get_source().to_string()),
                 ip_destination: Some(ipv4_packet.get_destination().to_string()),
                 l_4_protocol: Some(ipv4_packet.get_next_level_protocol().to_string()),
-                layer_4_infos: get_layer_4_infos(ipv4_packet.get_next_level_protocol(),data), 
+                layer_4_infos: get_layer_4_infos(ipv4_packet.get_next_level_protocol(), data),
             }
         } else {
             Default::default()
@@ -47,7 +52,7 @@ impl HandlePacket for Ipv4Handler {
 }
 
 impl HandlePacket for Ipv6Handler {
-    fn get_layer_3(data: &[u8]) -> Layer3Infos{
+    fn get_layer_3(data: &[u8]) -> Layer3Infos {
         if let Some(ipv6_packet) = Ipv6Packet::new(data) {
             println!(
                 "Layer 3: IPv6 packet: source {} destination {} => {} {}",
@@ -60,7 +65,7 @@ impl HandlePacket for Ipv6Handler {
                 ip_source: Some(ipv6_packet.get_source().to_string()),
                 ip_destination: Some(ipv6_packet.get_destination().to_string()),
                 l_4_protocol: Some(ipv6_packet.get_next_header().to_string()),
-                layer_4_infos: get_layer_4_infos(ipv6_packet.get_next_header(), data), 
+                layer_4_infos: get_layer_4_infos(ipv6_packet.get_next_header(), data),
             }
             //handle_next_proto_util(data, ipv6_packet.get_next_header());
         } else {
@@ -71,7 +76,7 @@ impl HandlePacket for Ipv6Handler {
 }
 
 impl HandlePacket for ArpHandler {
-    fn get_layer_3(data: &[u8]) -> Layer3Infos{
+    fn get_layer_3(data: &[u8]) -> Layer3Infos {
         if let Some(arp_packet) = ArpPacket::new(data) {
             println!(
                 "Layer 2: arp packet: source {} destination {} => {:?} {} {} {:?} {} {}",
@@ -91,7 +96,6 @@ impl HandlePacket for ArpHandler {
                 layer_4_infos: Layer4Infos {
                     port_source: None,
                     port_destination: None,
-                     
                 },
             }
         } else {
@@ -101,7 +105,7 @@ impl HandlePacket for ArpHandler {
     }
 }
 
-pub fn get_layer_3_infos(ethernet_packet: &EthernetPacket<'_>) -> Layer3Infos{
+pub fn get_layer_3_infos(ethernet_packet: &EthernetPacket<'_>) -> Layer3Infos {
     match ethernet_packet.get_ethertype() {
         EtherTypes::Ipv6 => Ipv6Handler::get_layer_3(ethernet_packet.payload()),
         EtherTypes::Ipv4 => Ipv4Handler::get_layer_3(ethernet_packet.payload()),

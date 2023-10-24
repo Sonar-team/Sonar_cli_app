@@ -1,9 +1,8 @@
-use pnet::packet::Packet;
+use pnet::packet::dhcp::DhcpPacket;
+use pnet::packet::ip::{IpNextHeaderProtocol, IpNextHeaderProtocols};
 use pnet::packet::tcp::TcpPacket;
 use pnet::packet::udp::UdpPacket;
-use pnet::packet::ip::{IpNextHeaderProtocols, IpNextHeaderProtocol};
-use pnet::packet::dhcp::DhcpPacket;
-
+use pnet::packet::Packet;
 
 #[derive(Debug, Default)]
 pub struct Layer4Infos {
@@ -38,7 +37,7 @@ pub fn get_layer_4_infos(proto: IpNextHeaderProtocol, data: &[u8]) -> Layer4Info
         IpNextHeaderProtocols::Tcp => {
             if let Some(tcp_packet) = TcpPacket::new(data) {
                 if let Some(hotop_packet) = DhcpPacket::new(tcp_packet.payload()) {
-                    println!("{:?}",hotop_packet.get_file());
+                    println!("{:?}", hotop_packet.get_file());
                 }
 
                 tcp_packet.ports()

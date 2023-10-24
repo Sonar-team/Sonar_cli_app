@@ -142,3 +142,32 @@ fn test_handle_interrupt() {
     // Verify that the CSV file is created (You can use std::fs to check)
     // This depends on how your `create_csv` function is implemented.
 }
+
+#[cfg(test)]
+mod tests {
+    use pnet::datalink::dummy::{dummy_interface, interfaces};
+
+    #[test]
+    fn test_dummy_interface_creation() {
+        // Create a dummy interface
+        let dummy = dummy_interface(0);
+        println!("{}", &dummy);
+
+        // Obtain a list of dummy interfaces
+        let dummy_interfaces = interfaces();
+        println!("{:?}", &dummy_interfaces);
+
+        // Assert that the created dummy interface is in the list
+        assert!(
+            dummy_interfaces.contains(&dummy),
+            "Dummy interface not found in the list"
+        );
+
+        // Assert the presence of MAC address (it's an Option)
+        assert!(dummy.mac.is_some(), "MAC address is not present");
+
+        // You can also assert other properties of the dummy interface if needed
+        assert_eq!(dummy.name, "eth0", "Unexpected interface name");
+        assert_eq!(dummy.index, 0, "Unexpected interface index");
+    }
+}

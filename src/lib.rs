@@ -111,12 +111,7 @@ fn interfaces_handler(interface: &str) {
 }
 
 fn check_interface(interface: &str) -> bool {
-    match interface {
-        "all" => true,
-        _ => false,
-    }
+    matches!(interface, "all")
 }
-
-
 
 mod tests_unitaires;
