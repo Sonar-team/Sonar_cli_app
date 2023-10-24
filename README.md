@@ -1,4 +1,3 @@
-[![License Badge]](./LICENSE)
 [![CodecovBadge]](https://app.codecov.io/gh/Sonar-team/Sonar_cli_app)
 # Sonar - Surveillance Optimisée des Nœuds pour Analyse Réseau Sécurisé
 
