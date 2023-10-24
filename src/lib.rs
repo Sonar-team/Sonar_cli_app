@@ -73,26 +73,29 @@ pub fn scan_until_interrupt(output: &str, interface: &str) {
     println!("Press Ctrl+C to exit...");
     let running = Arc::new(AtomicBool::new(true));
     let r = running.clone();
-    let output_clone = output.to_string(); // Clonez output pour qu'il soit 'static'
-    ctrlc::set_handler(move || {
-        println!("Ctrl+C pressed. Exiting...");
-        r.store(false, SeqCst);
-        match create_csv(&output_clone) {
-            // Utilisez output_clone ici
-            Ok(_) => {
-                println!("Scan completed successfully. CSV file created.");
-            }
-            Err(err) => {
-                eprintln!("Error creating CSV file: {}", err);
-                process::exit(1);
-            }
-        }
-    })
-    .expect("Error setting Ctrl-C handler");
+    let output_clone = output.to_string();
+
+    ctrlc::set_handler(move || handle_interrupt(r.clone(), &output_clone))
+        .expect("Error setting Ctrl-C handler");
 
     while running.load(SeqCst) {
         // Continue running until Ctrl+C is pressed
         thread::sleep(Duration::from_secs(1));
+    }
+}
+
+// This new function encapsulates what should happen when Ctrl+C is pressed.
+pub fn handle_interrupt(r: Arc<AtomicBool>, output: &str) {
+    println!("Ctrl+C pressed. Exiting...");
+    r.store(false, SeqCst);
+    match create_csv(output) {
+        Ok(_) => {
+            println!("Scan completed successfully. CSV file created.");
+        }
+        Err(err) => {
+            eprintln!("Error creating CSV file: {}", err);
+            process::exit(1);
+        }
     }
 }
 

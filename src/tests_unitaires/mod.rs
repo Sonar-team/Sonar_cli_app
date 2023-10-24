@@ -127,3 +127,24 @@ fn test_scan_until_interrupt() {
     // Supprimez le fichier CSV de test après le test
     std::fs::remove_file(test_output).expect("Failed to remove test CSV file");
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::sync::{Arc, atomic::{AtomicBool, Ordering::SeqCst}};
+
+    #[test]
+    fn test_handle_interrupt() {
+        let running = Arc::new(AtomicBool::new(true));
+        let output = "test_output.csv";
+        
+        // Call the function
+        handle_interrupt(running.clone(), output);
+        
+        // Verify that 'running' is set to false
+        assert_eq!(running.load(SeqCst), false);
+        
+        // Verify that the CSV file is created (You can use std::fs to check)
+        // This depends on how your `create_csv` function is implemented.
+    }
+}
