@@ -1,7 +1,7 @@
 set -xu
 
 while IFS= read -r -d '' file; do
-    grep -rli 'unwrap' "$file"
+    grep -rli unwrap\( "$file"
     return_code=$?
     if [ $return_code -eq 0 ]; then
         echo "unwrap found in code"
