@@ -1,7 +1,6 @@
 #[cfg(test)]
-use super::*; // Import items from the main module
-              // Test case for get_args with default values
-
+use super::*;
+// Test case for get_args with default values
 // #[test]
 // fn test_main() {
 //     use assert_cmd::prelude::*; // Importez assert_cmd::prelude::* pour utiliser la syntaxe assert_cmd
