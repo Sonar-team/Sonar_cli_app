@@ -147,7 +147,6 @@ mod tests {
         // Verify that 'running' is set to false
         assert!(!running.load(SeqCst));
 
-
         // Verify that the CSV file is created (You can use std::fs to check)
         // This depends on how your `create_csv` function is implemented.
     }
