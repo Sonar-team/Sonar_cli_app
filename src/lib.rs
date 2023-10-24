@@ -12,7 +12,7 @@ use capture_packet::{all_interfaces, one_interface};
 use clap::Parser;
 use csv::Writer;
 
-mod capture_packet;
+pub mod capture_packet;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
