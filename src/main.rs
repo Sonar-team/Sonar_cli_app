@@ -1,13 +1,7 @@
 extern crate sonar_cli_app;
 
 use clap::Parser;
-use sonar_cli_app::{
-    print_banner,
-    get_args,
-    scan_for_time,
-    scan_until_interrupt,
-    Args
-};
+use sonar_cli_app::{get_args, print_banner, scan_for_time, scan_until_interrupt, Args};
 
 fn main() {
     println!("{}", print_banner());
@@ -25,4 +19,3 @@ fn main() {
         scan_until_interrupt(output, interface);
     }
 }
-

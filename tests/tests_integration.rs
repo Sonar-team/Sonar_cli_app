@@ -15,9 +15,8 @@ fn test_run_app_with_options() {
         .expect("Failed to run command");
 
     assert!(output.status.success()); // Check for successful exit
-    // Add more checks on `output.stdout` or `output.stderr` if you want
+                                      // Add more checks on `output.stdout` or `output.stderr` if you want
 }
-
 
 // #[test]
 // fn test_scan_until_interrupt_integration() {
@@ -52,6 +51,3 @@ fn test_run_app_with_options() {
 
 //     // Add more validations such as checking if a CSV file has been created, etc.
 // }
-
-
-

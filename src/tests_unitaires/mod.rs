@@ -131,19 +131,22 @@ fn test_scan_until_interrupt() {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::sync::{Arc, atomic::{AtomicBool, Ordering::SeqCst}};
+    use std::sync::{
+        atomic::{AtomicBool, Ordering::SeqCst},
+        Arc,
+    };
 
     #[test]
     fn test_handle_interrupt() {
         let running = Arc::new(AtomicBool::new(true));
         let output = "test_output.csv";
-        
+
         // Call the function
         handle_interrupt(running.clone(), output);
-        
+
         // Verify that 'running' is set to false
         assert_eq!(running.load(SeqCst), false);
-        
+
         // Verify that the CSV file is created (You can use std::fs to check)
         // This depends on how your `create_csv` function is implemented.
     }
