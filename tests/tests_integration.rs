@@ -9,7 +9,7 @@ fn test_run_app_with_options() {
     // Run the application with custom arguments
     let output = Command::new("target/debug/sonar_cli_app")
         .arg("--output=my_output.csv")
-        .arg("--interface=any")
+        .arg("--interface=lo")
         .arg("--time=1")
         .output()
         .expect("Failed to run command");

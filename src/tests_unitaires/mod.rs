@@ -22,14 +22,14 @@ use super::*;
 fn test_get_args_default() {
     let args = Args {
         output: "default_output".to_string(),
-        interface: "any".to_string(),
+        interface: "lo".to_string(),
         time: 0,
     };
 
     let (output, interface, time) = get_args(&args);
 
     assert_eq!(output, "default_output");
-    assert_eq!(interface, "any");
+    assert_eq!(interface, "lo");
     assert_eq!(time, &0);
 }
 
@@ -38,14 +38,14 @@ fn test_get_args_default() {
 fn test_get_args_custom() {
     let args = Args {
         output: "custom_output".to_string(),
-        interface: "any".to_string(),
+        interface: "lo".to_string(),
         time: 10,
     };
 
     let (output, interface, time) = get_args(&args);
 
     assert_eq!(output, "custom_output");
-    assert_eq!(interface, "any");
+    assert_eq!(interface, "lo");
     assert_eq!(time, &10);
 }
 // Test case for print_banner
@@ -86,7 +86,7 @@ fn test_scan_for_time_success() {
     let start_time = Instant::now();
 
     // Appelez la fonction de numérisation
-    scan_for_time(output, "test_interface", time.as_secs()); // Numérisation pendant 3 secondes (convertir la durée en secondes)
+    scan_for_time(output, "lo", time.as_secs()); // Numérisation pendant 3 secondes (convertir la durée en secondes)
 
     // Obtenez le temps écoulé
     let elapsed_time = start_time.elapsed();
@@ -109,7 +109,7 @@ fn test_scan_until_interrupt() {
 
     // Créez un thread pour exécuter la fonction scan_until_interrupt
     let handle = std::thread::spawn(move || {
-        scan_until_interrupt(test_output, "test_interface");
+        scan_until_interrupt(test_output, "lo");
     });
 
     // Pausez le test pendant un certain temps (assez long pour simuler une exécution)
@@ -128,26 +128,19 @@ fn test_scan_until_interrupt() {
     std::fs::remove_file(test_output).expect("Failed to remove test CSV file");
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use std::sync::{
-        atomic::{AtomicBool, Ordering::SeqCst},
-        Arc,
-    };
 
-    #[test]
-    fn test_handle_interrupt() {
-        let running = Arc::new(AtomicBool::new(true));
-        let output = "test_output.csv";
+#[test]
+fn test_handle_interrupt() {
+    let running = Arc::new(AtomicBool::new(true));
+    let output = "test_output.csv";
 
-        // Call the function
-        handle_interrupt(running.clone(), output);
+    // Call the function
+    handle_interrupt(running.clone(), output);
 
-        // Verify that 'running' is set to false
-        assert!(!running.load(SeqCst));
+    // Verify that 'running' is set to false
+    assert!(!running.load(SeqCst));
 
-        // Verify that the CSV file is created (You can use std::fs to check)
-        // This depends on how your `create_csv` function is implemented.
-    }
+    // Verify that the CSV file is created (You can use std::fs to check)
+    // This depends on how your `create_csv` function is implemented.
 }
+

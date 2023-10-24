@@ -66,8 +66,6 @@ fn capture_packets(interface: datalink::NetworkInterface) {
     }
 }
 
-
-
 #[cfg(test)]
 mod tests {
     use pnet::datalink::dummy::{dummy_interface, interfaces};
