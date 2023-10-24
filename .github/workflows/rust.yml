@@ -42,3 +42,5 @@ jobs:
         run: bash .github/workflows/scripts/check_line_endings.sh
       - name: Check TODOs
         run: bash .github/workflows/scripts/check_todos.sh
+      - name: Check Unwraps
+      run: bash .github/workflows/scripts/check_unwrap.sh

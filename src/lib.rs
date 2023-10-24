@@ -4,12 +4,15 @@ use std::{
         atomic::{AtomicBool, Ordering::SeqCst},
         Arc,
     },
-    thread::{self, sleep},
+    thread::sleep,
     time::Duration,
 };
 
+use capture_packet::{all_interfaces, one_interface};
 use clap::Parser;
 use csv::Writer;
+
+mod capture_packet;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -56,6 +59,7 @@ pub fn scan_for_time(output: &str, interface: &str, time: u64) {
 
     let duration = Duration::from_secs(time);
     sleep(duration);
+    interfaces_handler(interface);
 
     match create_csv(output) {
         Ok(_) => {
@@ -80,7 +84,7 @@ pub fn scan_until_interrupt(output: &str, interface: &str) {
 
     while running.load(SeqCst) {
         // Continue running until Ctrl+C is pressed
-        thread::sleep(Duration::from_secs(1));
+        interfaces_handler(interface);
     }
 }
 
@@ -98,5 +102,21 @@ pub fn handle_interrupt(r: Arc<AtomicBool>, output: &str) {
         }
     }
 }
+
+fn interfaces_handler(interface: &str) {
+    match check_interface(interface) {
+        true => all_interfaces(),
+        false => one_interface(interface),
+    }
+}
+
+fn check_interface(interface: &str) -> bool {
+    match interface {
+        "all" => true,
+        _ => false,
+    }
+}
+
+
 
 mod tests_unitaires;
