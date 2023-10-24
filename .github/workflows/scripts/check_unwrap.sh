@@ -1,4 +1,3 @@
-#!/bin/bash
 set -xu
 
 while IFS= read -r -d '' file; do
@@ -11,6 +10,5 @@ while IFS= read -r -d '' file; do
         echo "Error while detecting unwraps in code"
         exit 1
     fi
-done < <(find . -type f -name '*.rs' -print0)
-
+done< <(find . -type f -name '*.rs' -print0)
 echo "No unwrap found in code"
