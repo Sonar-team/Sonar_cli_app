@@ -170,4 +170,21 @@ mod tests {
         assert_eq!(dummy.name, "eth0", "Unexpected interface name");
         assert_eq!(dummy.index, 0, "Unexpected interface index");
     }
+
+    #[test]
+    fn test_compte_a_rebours() {
+        use crate::compte_a_rebours;
+        use std::time::Instant;
+        let time_to_count = 2; // 2 secondes
+        let instant = Instant::now();
+
+        // Appel de la fonction
+        compte_a_rebours(time_to_count);
+
+        let elapsed_time = instant.elapsed().as_secs();
+
+        // Comparaison du temps écoulé avec la valeur attendue.
+        // Vous pouvez permettre une petite marge d'erreur si nécessaire.
+        assert_eq!(elapsed_time, time_to_count);
+    }
 }
