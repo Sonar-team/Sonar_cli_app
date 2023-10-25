@@ -1,5 +1,5 @@
 use std::{
-    process,
+    error::Error,
     sync::{
         atomic::{AtomicBool, Ordering::SeqCst},
         Arc,
@@ -44,18 +44,10 @@ pub fn print_banner() -> String {
           \/            \/     \/          
    ";
 
-    banner.to_string()
+    banner.green().to_string()
 }
 
-pub fn create_csv(output: &str) -> Result<(), Box<dyn std::error::Error>> {
-    // creat a csv file
-    let mut writer = Writer::from_path(output)?;
-    // Fermez le fichier CSV (c'est important pour garantir que les données sont écrites)
-    writer.flush()?;
-    Ok(())
-}
-
-pub fn scan_for_time(output: &str, interface: &str, time: u64) {
+pub fn scan_for_time(output: &str, interface: &str, time: u64) -> Result<(), Box<dyn Error>> {
     println!(
         "Scanning {} interface(s) for {} seconds...",
         interface, time
@@ -66,57 +58,7 @@ pub fn scan_for_time(output: &str, interface: &str, time: u64) {
     });
 
     compte_a_rebours(time);
-    match create_csv(output) {
-        Ok(_) => {
-            println!("Scan completed successfully. CSV file created.");
-        }
-        Err(err) => {
-            eprintln!("Error creating CSV file: {}", err);
-            process::exit(1);
-        }
-    }
-}
-
-pub fn scan_until_interrupt(output: &str, interface: &str) {
-    println!("Scanning {} ...", interface);
-    println!("Press Ctrl+C to exit...");
-    let running = Arc::new(AtomicBool::new(true));
-    let r = running.clone();
-    let output_clone = output.to_string();
-
-    ctrlc::set_handler(move || handle_interrupt(r.clone(), &output_clone))
-        .expect("Error setting Ctrl-C handler");
-
-    while running.load(SeqCst) {
-        // Continue running until Ctrl+C is pressed
-        interfaces_handler(interface);
-    }
-}
-
-// This new function encapsulates what should happen when Ctrl+C is pressed.
-pub fn handle_interrupt(r: Arc<AtomicBool>, output: &str) {
-    println!("Ctrl+C pressed. Exiting...");
-    r.store(false, SeqCst);
-    match create_csv(output) {
-        Ok(_) => {
-            println!("Scan completed successfully. CSV file created.");
-        }
-        Err(err) => {
-            eprintln!("Error creating CSV file: {}", err);
-            process::exit(1);
-        }
-    }
-}
-
-fn interfaces_handler(interface: &str) {
-    match check_interface(interface) {
-        true => all_interfaces(),
-        false => one_interface(interface),
-    }
-}
-
-fn check_interface(interface: &str) -> bool {
-    matches!(interface, "all")
+    create_csv(output)
 }
 
 fn compte_a_rebours(mut time: u64) {
@@ -131,8 +73,42 @@ fn compte_a_rebours(mut time: u64) {
         time -= 1;
         sleep(Duration::from_secs(1));
     }
-
     println!("{}", "Compte à rebours: Temps écoulé!".red());
+}
+
+pub fn create_csv(output: &str) -> Result<(), Box<dyn Error>> {
+    // creat a csv file
+    let mut writer = Writer::from_path(output)?;
+    // Fermez le fichier CSV (c'est important pour garantir que les données sont écrites)
+    writer.flush()?;
+    Ok(())
+}
+
+pub fn scan_until_interrupt(output: &str, interface: &str) -> Result<(), Box<dyn Error>> {
+    interfaces_handler(interface);
+
+    create_csv(output)
+}
+
+// This function expects `create_csv` to be defined elsewhere and to return Result<(), io::Error>
+pub fn handle_interrupt(
+    r: Arc<AtomicBool>,
+    output: &str,
+) -> Result<(), Box<dyn std::error::Error>> {
+    println!("Ctrl+C pressed. Exiting...");
+    r.store(false, SeqCst);
+    create_csv(output)
+}
+
+fn interfaces_handler(interface: &str) {
+    match check_interface(interface) {
+        true => all_interfaces(),
+        false => one_interface(interface),
+    }
+}
+
+fn check_interface(interface: &str) -> bool {
+    matches!(interface, "all")
 }
 
 mod tests_unitaires;

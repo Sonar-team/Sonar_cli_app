@@ -134,7 +134,7 @@ fn test_handle_interrupt() {
     let output = "test_output.csv";
 
     // Call the function
-    handle_interrupt(running.clone(), output);
+    let _ = handle_interrupt(running.clone(), output);
 
     // Verify that 'running' is set to false
     assert!(!running.load(SeqCst));
