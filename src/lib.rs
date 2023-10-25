@@ -4,12 +4,13 @@ use std::{
         atomic::{AtomicBool, Ordering::SeqCst},
         Arc,
     },
-    thread::sleep,
+    thread::{self, sleep},
     time::Duration,
 };
 
 use capture_packet::{all_interfaces, one_interface};
 use clap::Parser;
+use colored::Colorize;
 use csv::Writer;
 
 pub mod capture_packet;
@@ -59,11 +60,12 @@ pub fn scan_for_time(output: &str, interface: &str, time: u64) {
         "Scanning {} interface(s) for {} seconds...",
         interface, time
     );
+    let interface_clone = interface.to_owned();
+    thread::spawn(move || {
+        interfaces_handler(&interface_clone);
+    });
 
-    let duration = Duration::from_secs(time);
-    sleep(duration);
-    interfaces_handler(interface);
-
+    compte_a_rebours(time);
     match create_csv(output) {
         Ok(_) => {
             println!("Scan completed successfully. CSV file created.");
@@ -115,6 +117,22 @@ fn interfaces_handler(interface: &str) {
 
 fn check_interface(interface: &str) -> bool {
     matches!(interface, "all")
+}
+
+fn compte_a_rebours(mut time: u64) {
+    loop {
+        println!(
+            "{}",
+            format!("Compte à rebours: {} secondes restantes", time).red()
+        );
+        if time == 0 {
+            break;
+        }
+        time -= 1;
+        sleep(Duration::from_secs(1));
+    }
+
+    println!("{}", "Compte à rebours: Temps écoulé!".red());
 }
 
 mod tests_unitaires;
