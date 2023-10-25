@@ -55,7 +55,10 @@ pub fn create_csv(output: &str) -> Result<(), Box<dyn std::error::Error>> {
 }
 
 pub fn scan_for_time(output: &str, interface: &str, time: u64) {
-    println!("Scanning {} interface(s) for {} seconds...", interface, time);
+    println!(
+        "Scanning {} interface(s) for {} seconds...",
+        interface, time
+    );
 
     let duration = Duration::from_secs(time);
     sleep(duration);
